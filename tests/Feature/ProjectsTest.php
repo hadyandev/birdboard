@@ -32,4 +32,18 @@ class ProjectsTest extends TestCase
         // melihat list project dengan '/projects' endpoint
         $this->get('/projects')->assertSee($attributes['title']);
     }
+
+    public function test_a_project_requires_a_title()
+    {
+        // 'make' ga nyimpen di db (return object), 'create' nyimpen di db (return object), 'raw' (return array)
+        $attributes = factory('App\Project')->raw(['title' => '']);
+        $this->post('/projects', $attributes)->assertSessionHasErrors('title');
+    }
+
+    public function test_a_project_requires_a_description()
+    {
+        // 'make' ga nyimpen di db (return object), 'create' nyimpen di db (return object), 'raw' (return array)
+        $attributes = factory('App\Project')->raw(['description' => '']);
+        $this->post('/projects', $attributes)->assertSessionHasErrors('description');
+    }
 }
