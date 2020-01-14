@@ -6,34 +6,27 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ProjectsTest extends TestCase
+class ManageProjectsTest extends TestCase
 {
     // use faker to populate data
     // refreshdatabase untuk mengembalikan keadaan db seperti semula pada testing
     use WithFaker, RefreshDatabase;
 
-    public function test_guests_cannot_create_projects()
-    {
-        // 'make' ga nyimpen di db (return object), 'create' nyimpen di db (return object), 'raw' (return array)
-        // ketika buat project tapi bukan user yg login,
-        $attributes = factory('App\Project')->raw();
-
-        // maka diharapkan akan diarahkan ke login page
-        $this->post('/projects', $attributes)->assertRedirect('login');
-    }
-
-    public function test_guests_cannot_view_projects()
-    {
-        // kalo ga login ga bisa liat
-        $this->get('/projects')->assertRedirect('login');
-    }
-
-    public function test_guests_cannot_view_a_single_project()
+    public function test_guests_cannot_manage_projects()
     {
         $project = factory('App\Project')->create();
 
-        // kalo ga login ga bisa liat
+        // guest cannot see projects
+        $this->get('/projects')->assertRedirect('login');
+
+        // guest cannot see create project page
+        $this->get('/projects/create')->assertRedirect('login');
+
+        // guest cannot see a single project
         $this->get($project->path())->assertRedirect('login');
+
+        // guest cannot create a project
+        $this->post('/projects', $project->toArray())->assertRedirect('login');
     }
 
     public function test_a_user_can_create_a_project()
@@ -43,6 +36,8 @@ class ProjectsTest extends TestCase
 
         // create a brand new user and set them authenticated
         $this->actingAs(factory('App\User')->create());
+
+        $this->get('/projects/create')->assertStatus(200);
 
         // data to submit
         $attributes = [
