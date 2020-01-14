@@ -33,6 +33,20 @@ class ProjectsTest extends TestCase
         $this->get('/projects')->assertSee($attributes['title']);
     }
 
+    public function test_a_user_can_view_a_project()
+    {
+        // ga nangkep exception karena kita ingin melihat exception itu sendiri
+        $this->withoutExceptionHandling();
+
+        // ketika ada sebuah project
+        $project = factory('App\Project')->create();
+
+        // diharapkan dapat melihat title dan descriptionnya
+        $this->get($project->path())
+            ->assertSee($project->title)
+            ->assertSee($project->description);
+    }
+
     public function test_a_project_requires_a_title()
     {
         // 'make' ga nyimpen di db (return object), 'create' nyimpen di db (return object), 'raw' (return array)

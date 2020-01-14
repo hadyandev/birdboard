@@ -13,10 +13,19 @@ class ProjectsController extends Controller
         return view('projects.index', compact('projects'));
     }
 
+    public function show(Project $project)
+    {
+        // udah ngebind dengan $project, gausah nyari project::find($id) lagi
+        return view('projects.show', compact('project'));
+    }
+
     public function store()
     {
         // validate
-        $attributes = request()->validate(['title' => 'required', 'description' => 'required']);
+        $attributes = request()->validate([
+            'title' => 'required',
+            'description' => 'required',
+        ]);
 
         // persist
         Project::create($attributes);
