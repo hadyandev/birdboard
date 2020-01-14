@@ -27,8 +27,14 @@ class ProjectsController extends Controller
             'description' => 'required',
         ]);
 
+        // owner_id adalah id dari user yg login
+        // $attributes['owner_id'] = auth()->id();
+
         // persist
-        Project::create($attributes);
+        // Project::create($attributes);
+
+        // authenticated user bisa membuat project (refactoring)
+        auth()->user()->projects()->create($attributes);
 
         // redirect
         return redirect('/projects');
