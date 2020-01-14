@@ -8,13 +8,20 @@ class ProjectsController extends Controller
 {
     public function index()
     {
-        $projects = Project::all();
+        // display only projects that associated to signed user
+        $projects = auth()->user()->projects;
 
         return view('projects.index', compact('projects'));
     }
 
     public function show(Project $project)
     {
+        // if authenticated user is not the project owner
+        if (auth()->user()->isNot($project->owner)) {
+            // display accessing forbidden page
+            abort(403);
+        }
+
         // udah ngebind dengan $project, gausah nyari project::find($id) lagi
         return view('projects.show', compact('project'));
     }
