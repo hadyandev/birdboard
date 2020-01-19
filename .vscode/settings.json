@@ -18,5 +18,6 @@
         "editorGroup.border": "#8d4f30",
         "tab.activeBorder": "#8d4f30"
     },
-    "peacock.color": "#673a23"
+    "peacock.color": "#673a23",
+    "css.validate": false
 }
