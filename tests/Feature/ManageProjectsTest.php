@@ -35,7 +35,7 @@ class ManageProjectsTest extends TestCase
         $this->withoutExceptionHandling();
 
         // create a brand new user and set them authenticated
-        $this->actingAs(factory('App\User')->create());
+        $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
 
@@ -58,7 +58,7 @@ class ManageProjectsTest extends TestCase
     public function test_a_user_can_view_their_project()
     {
         // being signed user
-        $this->be(factory('App\User')->create());
+        $this->signIn();
 
         // ga nangkep exception karena kita ingin melihat exception itu sendiri
         $this->withoutExceptionHandling();
@@ -75,7 +75,7 @@ class ManageProjectsTest extends TestCase
     public function test_an_authenticated_user_cannot_view_the_projects_of_others()
     {
         // being signed user
-        $this->be(factory('App\User')->create());
+        $this->signIn();
 
         // ketika ada sebuah project
         $project = factory('App\Project')->create();
@@ -87,7 +87,7 @@ class ManageProjectsTest extends TestCase
     public function test_a_project_requires_a_title()
     {
         // create a brand new user and set them authenticated
-        $this->actingAs(factory('App\User')->create());
+        $this->signIn();
 
         // 'make' ga nyimpen di db (return object), 'create' nyimpen di db (return object), 'raw' (return array)
         $attributes = factory('App\Project')->raw(['title' => '']);
@@ -97,7 +97,7 @@ class ManageProjectsTest extends TestCase
     public function test_a_project_requires_a_description()
     {
         // create a brand new user and set them authenticated
-        $this->actingAs(factory('App\User')->create());
+        $this->signIn();
 
         // 'make' ga nyimpen di db (return object), 'create' nyimpen di db (return object), 'raw' (return array)
         $attributes = factory('App\Project')->raw(['description' => '']);
