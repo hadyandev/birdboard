@@ -46,9 +46,9 @@ class ProjectsController extends Controller
         // Project::create($attributes);
 
         // authenticated user bisa membuat project (refactoring)
-        auth()->user()->projects()->create($attributes);
+        $project = auth()->user()->projects()->create($attributes);
 
-        // redirect
-        return redirect('/projects');
+        // redirect to its project page
+        return redirect($project->path());
     }
 }
