@@ -19,14 +19,14 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="bg-gray-light">
+<body class="bg-grey-lighter">
     <div id="app">
-        <nav class="bg-white">
+        <nav class="bg-white section">
             <div class="container mx-auto">
-                <div class="flex justify-between items-center py-2">
+                <div class="flex justify-between items-center py-1">
                     <h1>
                         <a class="navbar-brand" href="{{ url('/projects') }}">
-                            <img src="/images/logo.svg" alt="Birdboard">
+                            <img src="/images/logo.svg" alt="Birdboard" class="relative" style="top: 2px">
                         </a>
                     </h1>
 
@@ -51,8 +51,8 @@
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                        document.getElementById('logout-form').submit();">
+                                           onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -68,7 +68,7 @@
             </div>
         </nav>
 
-        <main class="py-4 container mx-auto">
+        <main class="container mx-auto py-6 section">
             @yield('content')
         </main>
     </div>

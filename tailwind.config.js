@@ -11,11 +11,12 @@ module.exports = {
         },
         colors: {
             transparent: "transparent",
+            grey: "rgba(0, 0, 0, 0.4)",
 
-            black: "#000",
+            black: "#222222",
             white: "#fff",
 
-            gray: {
+            grey: {
                 100: "#f7fafc",
                 200: "#edf2f7",
                 300: "#e2e8f0",
@@ -25,7 +26,9 @@ module.exports = {
                 700: "#4a5568",
                 800: "#2d3748",
                 900: "#1a202c",
-                light: "#F5F6F9"
+                light: "#E1E6E8",
+                lighter: "#F5F6F9",
+                lightest: "#f8fafc"
             },
             red: {
                 100: "#fff5f5",
