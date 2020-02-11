@@ -40,6 +40,11 @@ class User extends Authenticatable
     public function projects()
     {
         // specify owner_id sebagai foreign key. defaultnya adalah user_id
-        return $this->hasMany(Project::class, 'owner_id');
+
+        // method yang sama
+
+        // return $this->hasMany(Project::class, 'owner_id')->orderBy('updated_at', 'desc');
+        // return $this->hasMany(Project::class, 'owner_id')->orderByDesc('updated_at');
+        return $this->hasMany(Project::class, 'owner_id')->latest('updated_at'); //default created_at
     }
 }

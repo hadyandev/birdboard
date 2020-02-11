@@ -9,6 +9,9 @@ class Task extends Model
 {
     protected $guarded = [];
 
+    // merelasikan perubahn dengan parent/objek yg diinginkan. ketika task bertambah/berubah, last_updated pada project juga berubah
+    protected $touches = ['project'];
+
     public function project()
     {
         return $this->belongsTo(Project::class);
