@@ -1,21 +1,32 @@
-@extends('layouts.app')
+@extends ('layouts.app')
 
 @section('content')
-    <h1>Create a Project</h1>
-
     <form method="POST" action="/projects">
         @csrf
-        <div class="form-group">
-            <label for="">Title</label>
-            <input type="text" name="title" class="form-control">
+
+        <h1 class="heading is-1">Create a Project</h1>
+
+        <div class="field">
+            <label class="label" for="title">Title</label>
+
+            <div class="control">
+                <input type="text" class="input" name="title" placeholder="Title">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="">Description</label>
-            <textarea name="description" class="form-control" id="" cols="30" rows="10"></textarea>
+
+        <div class="field">
+            <label class="label" for="description">Description</label>
+
+            <div class="control">
+                <textarea name="description" class="textarea"></textarea>
+            </div>
         </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-dark">Create Project</button>
-            <a href="/projects" class="btn btn-warning">Cancel</a>
+
+        <div class="field">
+            <div class="control">
+                <button type="submit" class="button is-link">Create Project</button>
+                <a href="/projects">Cancel</a>
+            </div>
         </div>
     </form>
 @endsection

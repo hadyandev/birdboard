@@ -33,7 +33,7 @@ class ManageProjectsTest extends TestCase
     public function test_a_user_can_create_a_project()
     {
         // ga nangkep exception karena kita ingin melihat exception itu sendiri
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
 
         // create a brand new user and set them authenticated
         $this->signIn();
@@ -43,18 +43,41 @@ class ManageProjectsTest extends TestCase
         // data to submit
         $attributes = [
             'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph,
+            'description' => $this->faker->sentence,
+            'notes' => 'General notes here..',
         ];
 
         // submit data with '/projects' endpoint lalu diharapkan diredirect kembali ke project page
         $response = $this->post('/projects', $attributes);
-        $response->assertRedirect(Project::where($attributes)->first()->path());
+        $project = Project::where($attributes)->first();
+        $response->assertRedirect($project->path());
 
         // data yg disubmit masuk ke db dgn table projects
         $this->assertDatabaseHas('projects', $attributes);
 
         // melihat list project dengan '/projects' endpoint
-        $this->get('/projects')->assertSee($attributes['title']);
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    public function test_a_user_can_update_a_project()
+    {
+        // being signed user
+        $this->signIn();
+
+        // ga nangkep exception karena kita ingin melihat exception itu sendiri
+        $this->withoutExceptionHandling();
+
+        // ketika ada sebuah project dimana owner_id = signed user
+        $project = factory('App\Project')->create(['owner_id' => auth()->id()]);
+
+        $this->patch($project->path(), [
+            'notes' => 'Changed',
+        ])->assertRedirect($project->path());
+
+        $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
     }
 
     public function test_a_user_can_view_their_project()
@@ -84,6 +107,18 @@ class ManageProjectsTest extends TestCase
 
         // secara default forbidden page
         $this->get($project->path())->assertStatus(403);
+    }
+
+    public function test_an_authenticated_user_cannot_update_the_projects_of_others()
+    {
+        // being signed user
+        $this->signIn();
+
+        // ketika ada sebuah project
+        $project = factory('App\Project')->create();
+
+        // secara default forbidden page
+        $this->patch($project->path(), [])->assertStatus(403);
     }
 
     public function test_a_project_requires_a_title()

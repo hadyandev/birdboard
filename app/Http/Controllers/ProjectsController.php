@@ -17,10 +17,7 @@ class ProjectsController extends Controller
     public function show(Project $project)
     {
         // if authenticated user is not the project owner
-        if (auth()->user()->isNot($project->owner)) {
-            // display accessing forbidden page
-            abort(403);
-        }
+        $this->authorize('update', $project);
 
         // udah ngebind dengan $project, gausah nyari project::find($id) lagi
         return view('projects.show', compact('project'));
@@ -37,8 +34,10 @@ class ProjectsController extends Controller
         $attributes = request()->validate([
             'title' => 'required',
             'description' => 'required',
+            'notes' => 'min:3',
         ]);
 
+        // dd($attributes);
         // owner_id adalah id dari user yg login
         // $attributes['owner_id'] = auth()->id();
 
@@ -49,6 +48,27 @@ class ProjectsController extends Controller
         $project = auth()->user()->projects()->create($attributes);
 
         // redirect to its project page
+        return redirect($project->path());
+    }
+
+    public function update(Project $project)
+    {
+        // if authenticated user is not the project owner
+        // if (auth()->user()->isNot($project->owner)) {
+        //     // display accessing forbidden page
+        //     abort(403);
+        // }
+
+        // diganti dengan :
+        $this->authorize('update', $project);
+
+        // $project->update([
+        //     'notes' => request('notes'),
+        // ]);
+
+        // sama juga dengan :
+        $project->update(request(['notes']));
+
         return redirect($project->path());
     }
 }

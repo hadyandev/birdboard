@@ -18,6 +18,7 @@ class CreateProjectsTable extends Migration
             $table->unsignedInteger('owner_id');
             $table->string('title');
             $table->text('description');
+            $table->text('notes')->nullable();
             $table->timestamps();
 
             // kalo user dihapus, maka semua project yg berhubungan dengan user tesebut akan dihapus juga
