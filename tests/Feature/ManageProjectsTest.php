@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -45,8 +46,9 @@ class ManageProjectsTest extends TestCase
             'description' => $this->faker->paragraph,
         ];
 
-        // submit data with '/projects' endpoint lalu diharapkan diredirect kembali ke '/projects'
-        $this->post('/projects', $attributes)->assertRedirect('/projects');
+        // submit data with '/projects' endpoint lalu diharapkan diredirect kembali ke project page
+        $response = $this->post('/projects', $attributes);
+        $response->assertRedirect(Project::where($attributes)->first()->path());
 
         // data yg disubmit masuk ke db dgn table projects
         $this->assertDatabaseHas('projects', $attributes);
