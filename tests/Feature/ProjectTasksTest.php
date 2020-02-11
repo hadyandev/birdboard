@@ -13,6 +13,29 @@ class ProjectTasksTest extends TestCase
      *
      * @return void
      */
+
+    public function test_guest_cannot_add_tasks_to_projects()
+    {
+        $project = factory('App\Project')->create();
+
+        $this->post($project->path() . '/tasks')
+            ->assertRedirect('login');
+    }
+
+    public function test_only_the_owner_of_a_project_may_add_tasks()
+    {
+        $this->signIn();
+
+        // jika ada project
+        $project = factory('App\Project')->create();
+
+        // lalu add task where user is not the owner of the project, expect forbidden 403
+        $this->post($project->path() . '/tasks', ['body' => 'Test task'])
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('tasks', ['body' => 'Test task']);
+    }
+
     public function test_a_project_can_have_tasks()
     {
         $this->signIn();
@@ -24,6 +47,7 @@ class ProjectTasksTest extends TestCase
         //     factory('App\Project')->raw()
         // );
 
+        // add task
         $this->post($project->path() . '/tasks', ['body' => 'Test task']);
 
         $this->get($project->path())
