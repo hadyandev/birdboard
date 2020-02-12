@@ -23,6 +23,9 @@ class ManageProjectsTest extends TestCase
         // guest cannot see create project page
         $this->get('/projects/create')->assertRedirect('login');
 
+        // guest cannot see edit project page
+        $this->get($project->path() . '/edit')->assertRedirect('login');
+
         // guest cannot see a single project
         $this->get($project->path())->assertRedirect('login');
 
@@ -64,6 +67,7 @@ class ManageProjectsTest extends TestCase
 
     public function test_a_user_can_update_a_project()
     {
+        $this->withoutExceptionHandling();
         // being signed user
         $this->signIn();
 
@@ -74,8 +78,15 @@ class ManageProjectsTest extends TestCase
         $project = factory('App\Project')->create(['owner_id' => auth()->id()]);
 
         $this->patch($project->path(), [
+            'title' => 'Changed',
+            'description' => 'Changed',
             'notes' => 'Changed',
         ])->assertRedirect($project->path());
+
+        // get edit project page
+        // $this->get($project->path() . '/edit')->assertStatus(200);
+        // sama juga dengan :
+        $this->get($project->path() . '/edit')->assertOk();
 
         $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
     }

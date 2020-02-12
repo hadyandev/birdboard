@@ -31,11 +31,11 @@ class ProjectsController extends Controller
     public function store()
     {
         // validate
-        $attributes = request()->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'notes' => 'min:3',
-        ]);
+        // $attributes = request()->validate([
+        //     'title' => 'required',
+        //     'description' => 'required',
+        //     'notes' => 'min:3',
+        // ]);
 
         // dd($attributes);
         // owner_id adalah id dari user yg login
@@ -45,10 +45,18 @@ class ProjectsController extends Controller
         // Project::create($attributes);
 
         // authenticated user bisa membuat project (refactoring)
-        $project = auth()->user()->projects()->create($attributes);
+        // $project = auth()->user()->projects()->create($attributes);
+
+        // semua validasi sebelum store diganti dgn ini :
+        $project = auth()->user()->projects()->create($this->validateRequest());
 
         // redirect to its project page
         return redirect($project->path());
+    }
+
+    public function edit(Project $project)
+    {
+        return view('projects.edit', compact('project'));
     }
 
     public function update(Project $project)
@@ -62,13 +70,36 @@ class ProjectsController extends Controller
         // diganti dengan :
         $this->authorize('update', $project);
 
+        // $attributes = request()->validate([
+        //     'title' => 'required',
+        //     'description' => 'required',
+        //     'notes' => 'min:3',
+        // ]);
+
         // $project->update([
         //     'notes' => request('notes'),
         // ]);
 
         // sama juga dengan :
-        $project->update(request(['notes']));
+        // $project->update($attributes);
+
+        // semua validasi sebelum update diganti dgn ini :
+        $project->update($this->validateRequest());
 
         return redirect($project->path());
+    }
+
+    /**
+     * Validate the request attributes.
+     *
+     * @return array
+     */
+    protected function validateRequest()
+    {
+        return request()->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'notes' => 'min:3',
+        ]);
     }
 }
